@@ -15,7 +15,14 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Project::select('id', 'title', 'github_reference', 'description', 'image')->paginate();
+        $projects = Project::select('id', 'title', 'github_reference', 'description', 'image')
+        ->orderBy('updated_at', 'DESC')
+        ->paginate();
+
+        foreach($projects as $project) {
+            $project->image = !empty($project->image) ? asset('/storage/' . $project->image) : 'https://placehold.co/600x400';
+        }
+
         return response()->json($projects);
     }
 
